@@ -1,9 +1,11 @@
+import os
 import re
 from playwright.sync_api import Playwright, sync_playwright, expect
 
 
 def run(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=False, slow_mo=500) 
+    headless = os.getenv("CI", "false").lower() == "true"
+    browser = playwright.chromium.launch(headless=headless, slow_mo=500) 
     context = browser.new_context()
     page = context.new_page()
     page.goto("https://shadab012s.github.io/PRACTISE/")
