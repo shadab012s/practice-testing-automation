@@ -1,0 +1,28 @@
+name: Run Tests from External Trigger
+
+on:
+  repository_dispatch:
+    types: [run-tests]
+
+jobs:
+  playwright-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3   # checkout your test repo
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'   # match your pyproject.toml
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install dependencies
+        run: poetry install --no-root
+
+      - name: Install Playwright browsers
+        run: poetry run playwright install --with-deps
+
+      - name: Run tests
+        run: poetry run pytest -v
